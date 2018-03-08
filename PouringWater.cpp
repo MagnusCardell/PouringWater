@@ -20,6 +20,34 @@ public:
 
     void genState(Cups n){
         //Generate all valid neightbours
+        bool [] next = {true, true, true, true, true, true};
+        int [][] pos = {{0,1},{0,2},{1,2},{1,0},{2,0},{2,1}};
+        int j = 0;
+        while(j<3){
+            /*if cup is full, all situations is is poured into
+                are false*/
+            if(currState[j][0]==currState[j][1]){
+                for(int w = 0; w < 6; w++){
+                    if(poss[w][1]==j)
+                        pos[w]=false;
+                }
+            }
+            /*if cup is empty, all situations is is poured from
+                are false*/
+            if(currState[j][0]==0){
+                for(int w = 0; w < 6; w++){
+                    if(poss[w][0]==j)
+                        next[w]==false;
+                }
+            }
+        }
+        int i = 0;
+        while(i < 6){
+            if(next[i]){
+                int maxFill = currState[pos[i][1]][1] - currState[pos[i][1]][0];
+                //create a child where that much has been poured. Do that for all possible situations.
+            }
+        }
         children.push_back(n);
         return;
     }
@@ -49,7 +77,7 @@ public:
             - while loop iterates
     Upon completion of search return path (no success)
 */
-string depthFirstSearch(Cups root, Cups goal){
+string breadthFirstSearch(Cups root, Cups goal){
     queue<Cups> FIFO_stack; //for saving stack order
     map<Cups, int> control; // for checking visited Cups
     vector<Cups> children; //for saving neighbours
