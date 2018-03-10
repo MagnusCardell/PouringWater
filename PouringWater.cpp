@@ -13,22 +13,22 @@ class Node{
 public:
     Node(int ten, int seven, int four){
         currState = new int*[3];
-        cout<<"SO FAR SO GOOD1"<<endl;
-        for(int i=0; i<2; ++i){
+        //cout<<"SO FAR SO GOOD1"<<endl;
+        for(int i=0; i<3; ++i){
             currState[i] = new int[2];
         }
-        cout<<"SO FAR SO GOOD2"<<endl;
+        //cout<<"SO FAR SO GOOD2"<<endl;
         currState[0][0]=ten;
         currState[0][1]=10;
         currState[1][0]=seven;
         currState[1][1]=7;
         currState[2][0]=four;
         currState[2][1]=4;
-        cout<<"SO FAR SO GOOD3"<<endl;
+        //cout<<"SO FAR SO GOOD3"<<endl;
     }
     Node(int **curr){
         currState = new int*[3];
-        for(int i=0; i<2; ++i){
+        for(int i=0; i<3; ++i){
             currState[i] = new int[2];
         }
         for(int i=0; i<3; ++i){
@@ -45,7 +45,7 @@ public:
         int pos[6][2] = {{0,1},{0,2},{1,2},{1,0},{2,0},{2,1}};
         int j = 0;
         int **temp = new int*[3];
-        for(int i=0; i<2; ++i){
+        for(int i=0; i<3; ++i){
             temp[i] = new int[2];
         }
         while(j<3){
@@ -67,9 +67,14 @@ public:
             }
             ++j;
         }
+        //cout << "here1"<<endl;
         int i = 0;
         while(i < 6){
-            copy( &currState[0][0], &currState[0][0]+3*2, &temp[0][0]);
+            for(int m = 0; m < 3; m++){
+                for(int n = 0; n < 2; n++)
+                    temp[m][n]=currState[m][n];
+                //cout << "hi"<<endl;
+            }
             if(next[i]){
                 int maxFill = currState[pos[i][1]][1] - currState[pos[i][1]][0];
                 int inAmount = currState[pos[i][0]][0];
@@ -86,8 +91,13 @@ public:
                     temp[pos[i][1]][0]+=inAmount;
                     neighbours.push_back(temp);
                 }
+                cout << endl;
+                printIt(temp);
+
+                //print here
                 //create a child where that much has been poured. Do that for all possible situations.
             }
+            i++;
         }
         return neighbours;
     }
@@ -99,7 +109,17 @@ public:
     //bool operator==(Cups b){
     //    return b.currState.A==currState.A; // add in checks for B and C
     //}
+    void printIt(int **t) {
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 2; j++) {
+                cout << t[i][j]<<" ";
+            }
+            cout <<'\n';
+        }
+    }
 };
+
+
 
 string breadthFirstSearch(Node root){
     queue<Node> FIFO_stack; //for saving stack order
@@ -119,8 +139,13 @@ string breadthFirstSearch(Node root){
         }
         children = temp.genState();
 
+        cout << "children.size: " << children.size() << endl;
         for(int i=0; i< children.size(); ++i){
-            FIFO_stack.push(children[i]);
+            //cout << "here2" << endl;
+            Node t(children[i]);
+            //cout << "here1" << endl;
+            FIFO_stack.push(t);
+            //cout << "here" << endl;
         }
     }
     return path;
