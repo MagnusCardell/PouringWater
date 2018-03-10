@@ -5,15 +5,18 @@
 #include <queue>
 
 using namespace std;
+struct Cups{
+    vector<vector<int>> states; 
+};
 
 class Node{
     int n;
-    vector<vector<int>> currState; //for easy looping and checking
+    Cups currState;
 
 public:
     Node(){
         n = 0;
-        currState.A = 0/10;
+        currState.states = 0/10;
         currState.B;
         //waiting for logic...
     }
