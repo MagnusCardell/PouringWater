@@ -28,7 +28,7 @@ public:
                 are false*/
             if(currState[j][0]==currState[j][1]){
                 for(int w = 0; w < 6; w++){
-                    if(poss[w][1]==j)
+                    if(poss[w][1]==(j+1))
                         pos[w]=false;
                 }
             }
@@ -36,7 +36,7 @@ public:
                 are false*/
             if(currState[j][0]==0){
                 for(int w = 0; w < 6; w++){
-                    if(poss[w][0]==j)
+                    if(poss[w][0]==(j+1))
                         next[w]==false;
                 }
             }
