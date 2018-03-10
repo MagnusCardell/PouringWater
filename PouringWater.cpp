@@ -45,6 +45,17 @@ public:
         while(i < 6){
             if(next[i]){
                 int maxFill = currState[pos[i][1]][1] - currState[pos[i][1]][0];
+                int inAmount = currState[pos[i][0]][0];
+                if(maxFill <= inAmount){
+                    //create a child node with: 
+                    //currState[pos[i][0]][0]-=maxFill;
+                    //currState[pos[i][1]][0]+=maxFill;
+                }
+                else{
+                    //new with with:
+                    //currState[pos[i][0]][0]=0;
+                    //currState[pos[i][1]][0]+=inAmount;
+                }
                 //create a child where that much has been poured. Do that for all possible situations.
             }
         }
