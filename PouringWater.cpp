@@ -117,22 +117,44 @@ public:
             cout <<'\n';
         }
     }
+
+    void printIt() {
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 2; j++) {
+                cout << currState[i][j]<<" ";
+            }
+            cout <<'\n';
+        }
+    }
 };
 
+void print_queue(queue<Node> q){
+    while(!q.empty()){
+        q.front().printIt();
+        q.pop();
+        cout << endl;
+    }
+    cout << endl;
 
+}
 
 string breadthFirstSearch(Node root){
     queue<Node> FIFO_stack; //for saving stack order
+    queue<Node> copy;
     //map<Cups, int> control; // for checking visited Cups
     vector<int**> children; //for saving neighbours
     string path = ""; //saving path? 
+    int ctr = 0;
 
     FIFO_stack.push(root);
 
-    while(!FIFO_stack.empty()){
+    while(!FIFO_stack.empty() && ctr < 2){
         Node temp = FIFO_stack.front(); //Queue specific op
         //path += temp.n(); 
+        copy = FIFO_stack;
         FIFO_stack.pop();
+        cout << "queue " << ctr << endl;
+        print_queue(copy);
 
         if(temp.getState(1) == 2 or temp.getState(2) == 2){
             return "found it";
@@ -140,13 +162,14 @@ string breadthFirstSearch(Node root){
         children = temp.genState();
 
         cout << "children.size: " << children.size() << endl;
-        for(int i=0; i< children.size(); ++i){
+        for(unsigned int i=0; i< children.size(); ++i){
             //cout << "here2" << endl;
             Node t(children[i]);
             //cout << "here1" << endl;
             FIFO_stack.push(t);
             //cout << "here" << endl;
         }
+        ctr++;
     }
     return path;
 }
