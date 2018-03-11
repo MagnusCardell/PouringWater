@@ -6,6 +6,18 @@
 
 using namespace std;
 
+void printNOde(vector<int**> p){
+    for(int m=0; m<p.size(); ++m){
+        for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 2; j++) {
+                    cout << p[m][i][j]<<" ";
+                }
+                cout <<'\n';
+            }
+            cout<<"end of thing"<<endl;
+            cout <<'\n';
+        }
+}
 class Node{
     int n;
     int **currState;
@@ -44,10 +56,7 @@ public:
         bool next[] = {true, true, true, true, true, true};
         int pos[6][2] = {{0,1},{0,2},{1,2},{1,0},{2,0},{2,1}};
         int j = 0;
-        int **temp = new int*[3];
-        for(int i=0; i<3; ++i){
-            temp[i] = new int[2];
-        }
+        
         while(j<3){
             /*if cup is full, all situations is is poured into
                 are false*/
@@ -70,6 +79,11 @@ public:
         //cout << "here1"<<endl;
         int i = 0;
         while(i < 6){
+            int **temp = new int*[3];
+            for(int k=0; k<3; ++k){
+                temp[k] = new int[2];
+            }
+
             for(int m = 0; m < 3; m++){
                 for(int n = 0; n < 2; n++)
                     temp[m][n]=currState[m][n];
@@ -83,22 +97,27 @@ public:
                     //create a child node with: 
                     temp[pos[i][0]][0]-=maxFill;
                     temp[pos[i][1]][0]+=maxFill;
+                    //printIt(temp);
                     neighbours.push_back(temp);
+                    //printNOde(neighbours);
                 }
                 else{
                     //new with with:
                     temp[pos[i][0]][0]=0;
                     temp[pos[i][1]][0]+=inAmount;
+                    //printIt(temp);
                     neighbours.push_back(temp);
+                    //printNOde(neighbours);
                 }
-                cout << endl;
-                printIt(temp);
+                //cout << endl;
+                
 
                 //print here
                 //create a child where that much has been poured. Do that for all possible situations.
             }
             i++;
         }
+        //printNOde(neighbours);
         return neighbours;
     }
 
@@ -117,15 +136,34 @@ public:
             cout <<'\n';
         }
     }
+
+    void printIt() {
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 2; j++) {
+                cout << currState[i][j]<<" ";
+            }
+            cout <<'\n';
+        }
+    }
 };
 
+void print_queue(queue<Node> q){
+    while(!q.empty()){
+        q.front().printIt();
+        q.pop();
+        cout << endl;
+    }
+    cout <<"end of queue" << endl;
 
+}
 
 string breadthFirstSearch(Node root){
     queue<Node> FIFO_stack; //for saving stack order
+    queue<Node> copy;
     //map<Cups, int> control; // for checking visited Cups
     vector<int**> children; //for saving neighbours
     string path = ""; //saving path? 
+    int ctr = 0;
 
     FIFO_stack.push(root);
 
@@ -133,27 +171,31 @@ string breadthFirstSearch(Node root){
         Node temp = FIFO_stack.front(); //Queue specific op
         //path += temp.n(); 
         FIFO_stack.pop();
+        cout << "queue " << ctr << endl;
 
         if(temp.getState(1) == 2 or temp.getState(2) == 2){
             return "found it";
         }
         children = temp.genState();
-
+        //printNOde(children);
         cout << "children.size: " << children.size() << endl;
-        for(int i=0; i< children.size(); ++i){
+        for(unsigned int i=0; i< children.size(); ++i){
             //cout << "here2" << endl;
             Node t(children[i]);
             //cout << "here1" << endl;
             FIFO_stack.push(t);
             //cout << "here" << endl;
         }
+        //copy = FIFO_stack;
+        //print_queue(copy);
+        ctr++;
     }
     return path;
 }
 int main(){
     Node root(0,7,4);
    
-    breadthFirstSearch(root);
+    cout<<breadthFirstSearch(root)<<endl;
     
 
     return 0;
