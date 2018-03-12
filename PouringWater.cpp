@@ -21,24 +21,24 @@ void printNOde(vector<int**> p){
 class Node{
     int n;
     int **currState;
+    vector<string> path;
 
 public:
     Node(int ten, int seven, int four){
         currState = new int*[3];
-        //cout<<"SO FAR SO GOOD1"<<endl;
         for(int i=0; i<3; ++i){
             currState[i] = new int[2];
         }
-        //cout<<"SO FAR SO GOOD2"<<endl;
         currState[0][0]=ten;
         currState[0][1]=10;
         currState[1][0]=seven;
         currState[1][1]=7;
         currState[2][0]=four;
         currState[2][1]=4;
-        //cout<<"SO FAR SO GOOD3"<<endl;
+
+        path.push_back(this->getKey());
     }
-    Node(int **curr){
+    Node(int **curr, Node p){
         currState = new int*[3];
         for(int i=0; i<3; ++i){
             currState[i] = new int[2];
@@ -48,6 +48,8 @@ public:
                 currState[i][j]=curr[i][j];
             }
         }
+    path = p.path;
+    path.push_back(this->getKey());
     }
 
     vector<int**> genState(){
@@ -109,11 +111,6 @@ public:
                     neighbours.push_back(temp);
                     //printNOde(neighbours);
                 }
-                //cout << endl;
-                
-
-                //print here
-                //create a child where that much has been poured. Do that for all possible situations.
             }
             i++;
         }
@@ -121,8 +118,18 @@ public:
         return neighbours;
     }
 
+
     int getState(int i){
         return currState[i][0];
+    }
+
+    string getKey(){
+        string k = "";
+
+        k += std::to_string(currState[0][0]);
+        k += std::to_string(currState[1][0]);
+        k += std::to_string(currState[2][0]);
+        return k;
     }
 
     //bool operator==(Cups b){
@@ -145,6 +152,12 @@ public:
             cout <<'\n';
         }
     }
+
+    void printPath(){
+        for(int i=0; i<path.size(); ++i){
+            cout<<path[i]<<endl;
+        }
+    }
 };
 
 void print_queue(queue<Node> q){
@@ -157,45 +170,50 @@ void print_queue(queue<Node> q){
 
 }
 
-string breadthFirstSearch(Node root){
-    queue<Node> FIFO_stack; //for saving stack order
+void breadthFirstSearch(Node root){
+    queue<Node> FIFO_stack;
     queue<Node> copy;
-    //map<Cups, int> control; // for checking visited Cups
-    vector<int**> children; //for saving neighbours
-    string path = ""; //saving path? 
+    map<string, int> control;
+    vector<int**> children;
+    string key = "";
     int ctr = 0;
 
     FIFO_stack.push(root);
+    key = root.getKey();
+    control[key] = 1;
+
 
     while(!FIFO_stack.empty()){
-        Node temp = FIFO_stack.front(); //Queue specific op
-        //path += temp.n(); 
+        Node temp = FIFO_stack.front();
         FIFO_stack.pop();
         cout << "queue " << ctr << endl;
 
         if(temp.getState(1) == 2 or temp.getState(2) == 2){
-            return "found it";
+            temp.printPath();
+            cout<< "found it"<<'\n'<<endl;;
         }
         children = temp.genState();
         //printNOde(children);
-        cout << "children.size: " << children.size() << endl;
+        //cout << "children.size: " << children.size() << endl;
         for(unsigned int i=0; i< children.size(); ++i){
-            //cout << "here2" << endl;
-            Node t(children[i]);
-            //cout << "here1" << endl;
+            Node t(children[i], temp);
+            key = t.getKey();
+            if(control.count(key)){
+                continue;
+            }
+            control[key] = 1;
             FIFO_stack.push(t);
-            //cout << "here" << endl;
         }
         //copy = FIFO_stack;
         //print_queue(copy);
         ctr++;
     }
-    return path;
+    return;
 }
 int main(){
     Node root(0,7,4);
    
-    cout<<breadthFirstSearch(root)<<endl;
+    breadthFirstSearch(root);
     
 
     return 0;
